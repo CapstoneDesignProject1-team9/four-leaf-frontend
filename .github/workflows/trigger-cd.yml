@@ -1,0 +1,109 @@
+# =============================================================
+# [four-laef-frontend] CD 트리거
+# 경로: .github/workflows/trigger-cd.yml
+#
+# main 브랜치 push + CI 통과 시:
+#   1. Docker 이미지 빌드 & AWS ECR push
+#   2. four-leaf-infra 레포에 deploy-frontend 이벤트 dispatch
+# =============================================================
+
+name: Build & Trigger CD
+
+on:
+  push:
+    branches: [main]
+
+# CI가 통과한 커밋만 배포되도록 (ci.yml의 ci job 완료 대기)
+# 참고: GitHub는 같은 커밋에서 workflow_run으로 연결하거나
+#       push 이벤트에서 직접 CI job을 호출하는 방식을 권장합니다.
+# 아래는 push 시 CI + CD를 순서대로 실행하는 방식입니다.
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: four-leaf-frontend
+
+jobs:
+  # ────────────────────────────────────────
+  # Step 1: CI (빌드 & 린트 검증)
+  # ────────────────────────────────────────
+  ci:
+    name: CI — Build & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: /api
+          VITE_AI_BASE_URL: /ai
+
+  # ────────────────────────────────────────
+  # Step 2: Docker 빌드 & ECR push & Infra dispatch
+  # ────────────────────────────────────────
+  build-and-trigger:
+    name: Build Docker Image & Trigger Infra CD
+    runs-on: ubuntu-latest
+    needs: ci   # CI 통과 후에만 실행
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        id: build
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build \
+            -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG \
+            -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest \
+            .
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
+          echo "image=$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "registry=$ECR_REGISTRY" >> $GITHUB_OUTPUT
+
+      - name: Trigger four-leaf-infra CD
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # four-leaf-infra 레포의 repo 권한을 가진 PAT
+          token: ${{ secrets.INFRA_DISPATCH_TOKEN }}
+          repository: CapstoneDesignProject1-team9/four-leaf-infra
+          event-type: deploy-frontend
+          client-payload: |
+            {
+              "image_tag": "${{ github.sha }}",
+              "image_uri": "${{ steps.build.outputs.image }}",
+              "registry": "${{ steps.build.outputs.registry }}",
+              "sha": "${{ github.sha }}",
+              "ref": "${{ github.ref }}",
+              "actor": "${{ github.actor }}",
+              "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
