@@ -5,6 +5,8 @@
 # main 브랜치 push + CI 통과 시:
 #   1. Docker 이미지 빌드 & AWS ECR push
 #   2. four-leaf-infra 레포에 deploy-frontend 이벤트 dispatch
+#
+# 조직: CapstoneDesignProject1-team9
 # =============================================================
 
 name: Build & Trigger CD
@@ -12,11 +14,6 @@ name: Build & Trigger CD
 on:
   push:
     branches: [main]
-
-# CI가 통과한 커밋만 배포되도록 (ci.yml의 ci job 완료 대기)
-# 참고: GitHub는 같은 커밋에서 workflow_run으로 연결하거나
-#       push 이벤트에서 직접 CI job을 호출하는 방식을 권장합니다.
-# 아래는 push 시 CI + CD를 순서대로 실행하는 방식입니다.
 
 env:
   AWS_REGION: ap-northeast-2
@@ -38,13 +35,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
-      - name: Lint
-        run: npm run lint --if-present
+      - name: Lint (oxlint)
+        run: npm run lint
+
+      - name: Type check (tsc)
+        run: npx tsc --noEmit
 
       - name: Build
         run: npm run build
@@ -82,6 +82,8 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
+            --build-arg VITE_API_BASE_URL=/api \
+            --build-arg VITE_AI_BASE_URL=/ai \
             -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG \
             -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest \
             .
@@ -93,7 +95,6 @@ jobs:
       - name: Trigger four-leaf-infra CD
         uses: peter-evans/repository-dispatch@v3
         with:
-          # four-leaf-infra 레포의 repo 권한을 가진 PAT
           token: ${{ secrets.INFRA_DISPATCH_TOKEN }}
           repository: CapstoneDesignProject1-team9/four-leaf-infra
           event-type: deploy-frontend

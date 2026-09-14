@@ -5,8 +5,8 @@
 # 트리거: PR 생성/업데이트, main 브랜치 push
 # 단계:
 #   1. Node.js 의존성 설치
-#   2. 타입 체크 (TypeScript 프로젝트인 경우)
-#   3. Lint (ESLint)
+#   2. Lint (oxlint)
+#   3. TypeScript 타입 체크 (tsc --noEmit)
 #   4. 빌드 검증
 # =============================================================
 
@@ -35,27 +35,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          # package-lock.json이 있을 때만 캐시 활성화
+          cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
-      - name: Lint
-        run: npm run lint --if-present
-        continue-on-error: false
+      - name: Lint (oxlint)
+        run: npm run lint
 
-      - name: Type check
-        run: npm run type-check --if-present
-        continue-on-error: true   # TypeScript 미사용 프로젝트 대비
+      - name: Type check (tsc)
+        run: npx tsc --noEmit
 
       - name: Build
         run: npm run build
         env:
-          # Vite 빌드 시 필요한 최소 환경변수 (실제 값 불필요, 빌드 검증용)
           VITE_API_BASE_URL: /api
           VITE_AI_BASE_URL: /ai
 
-      - name: Upload build artifact (선택)
+      - name: Upload build artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
