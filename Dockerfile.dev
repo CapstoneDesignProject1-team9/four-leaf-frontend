@@ -2,7 +2,7 @@
 # 프로덕션 빌드가 아니라 개발 서버를 실행합니다.
 # 소스 코드는 docker-compose.dev.yml의 volume mount로 주입됩니다.
 
-FROM node:20-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 
