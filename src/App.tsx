@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import './App.css'
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <li><a href="#pipeline">파이프라인</a></li>
             <li><a href="#architecture">아키텍처</a></li>
             <li><a href="#get-started">시작하기</a></li>
+            <li><Link to="/chat" className="nav__chat-link">Chat with 네잎 ✨</Link></li>
           </ul>
           <a
             className="nav__cta"
@@ -77,6 +79,9 @@ function App() {
           <a href="#get-started" className="btn btn--primary">
             시작하기 →
           </a>
+          <Link to="/chat" className="btn btn--chat">
+            Chat with 네잎 ✨
+          </Link>
           <a
             href="https://github.com/CapstoneDesignProject1-team9"
             className="btn btn--secondary"
@@ -156,7 +161,6 @@ function App() {
           <div className="features-grid reveal" ref={addRevealRef}>
             {/* Track 1 */}
             <div className="feature-card">
-              <span className="feature-card__icon">🎓</span>
               <h3 className="feature-card__title">AI 튜터 — 학생용</h3>
               <p className="feature-card__desc">
                 대학 내부 문서 기반 RAG로 할루시네이션 없는 24시간 맞춤형 답변을 제공합니다.
@@ -171,7 +175,6 @@ function App() {
 
             {/* Track 2 */}
             <div className="feature-card">
-              <span className="feature-card__icon">📊</span>
               <h3 className="feature-card__title">AI 어드바이저 — 교수용</h3>
               <p className="feature-card__desc">
                 학생 질문 패턴을 AI가 분석하여 교수자에게 구조화된 인사이트를 제공합니다.
@@ -259,7 +262,7 @@ function App() {
 
         <div className="container">
           <pre className="arch-diagram reveal" ref={addRevealRef}>
-{`  ┌─────────────────────────────────────────────────┐
+            {`  ┌─────────────────────────────────────────────────┐
   │  `}<span className="accent">AWS EC2</span>{` (Ubuntu) — Docker Compose               │
   │                                                   │
   │  ┌───────────────────────────────────────────┐    │
@@ -418,7 +421,7 @@ function App() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              🍀 GitHub에서 기여하기
+              GitHub에서 기여하기
             </a>
             <a href="#hero" className="btn btn--secondary">
               위로 돌아가기 ↑
@@ -431,7 +434,7 @@ function App() {
       <footer className="footer">
         <div className="container">
           <p className="footer__text">
-            © 2026 Four-Leaf 🍀 — CapstoneDesignProject1 Team 9
+            © 2026 Four-Leaf(네잎) - CapstoneDesignProject1 Team 9
           </p>
           <ul className="footer__links">
             <li>
