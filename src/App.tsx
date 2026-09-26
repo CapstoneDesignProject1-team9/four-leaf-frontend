@@ -44,7 +44,7 @@ function App() {
             <li><a href="#pipeline">파이프라인</a></li>
             <li><a href="#architecture">아키텍처</a></li>
             <li><a href="#get-started">시작하기</a></li>
-            <li><Link to="/chat" className="nav__chat-link">Chat with 네잎 ✨</Link></li>
+            <li><Link to="/chat">Demo</Link></li>
           </ul>
           <a
             className="nav__cta"
@@ -79,8 +79,8 @@ function App() {
           <a href="#get-started" className="btn btn--primary">
             시작하기 →
           </a>
-          <Link to="/chat" className="btn btn--chat">
-            Chat with 네잎 ✨
+          <Link to="/chat" className="btn btn--secondary">
+            Demo
           </Link>
           <a
             href="https://github.com/CapstoneDesignProject1-team9"
@@ -249,6 +249,17 @@ function App() {
                 BGE-M3 임베딩 + ChromaDB 벡터 검색으로
                 근거 문서를 찾아 파인튜닝 모델이
                 답변과 출처를 함께 생성합니다.
+              </p>
+            </div>
+
+            <div className="pipeline__stage">
+              <div className="pipeline__number">5</div>
+              <h3 className="pipeline__stage-title">Live Demo</h3>
+              <p className="pipeline__stage-tech">React + Spring Boot</p>
+              <p className="pipeline__stage-desc">
+                서빙 중인 AI 모델을 홈페이지에 직접 연동하여,
+                사용자가 언제든 실시간으로 질문하고
+                AI 튜터를 체험해볼 수 있도록 구현했습니다.
               </p>
             </div>
           </div>

@@ -266,15 +266,15 @@
 .hero__terminal-title {
   flex: 1;
   text-align: center;
-  font-size: var(--font-size-small);
+  font-size: 1.2rem;
   color: var(--color-text-tertiary);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .hero__terminal-body {
   padding: 1.5rem 1.75rem;
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-  font-size: var(--font-size-code);
+  font-size: 1.3rem;
   line-height: 1.8;
   color: var(--color-text-secondary);
   overflow-x: auto;
@@ -403,26 +403,26 @@
 }
 
 .feature-card__desc {
-  color: var(--color-text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.6;
+  color: var(--color-text-primary);
+  font-size: 1.05rem;
+  line-height: 1.7;
 }
 
 .feature-card__list {
   list-style: none;
-  margin-top: 1.25rem;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 0.875rem;
 }
 
 .feature-card__list li {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  font-size: 0.9375rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
+  gap: 12px;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  line-height: 1.6;
 }
 
 .feature-card__list li::before {
@@ -433,11 +433,11 @@
   margin-top: 1px;
 }
 
-/* ─── Pipeline (4-Stage) ─── */
+/* ─── Pipeline (5-Stage) ─── */
 .pipeline {
   margin-top: var(--spacing-block);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0;
   position: relative;
 }
