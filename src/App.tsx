@@ -210,17 +210,28 @@ function App() {
           <div className="pipeline reveal" ref={addRevealRef}>
             <div className="pipeline__stage">
               <div className="pipeline__number">1</div>
+              <h3 className="pipeline__stage-title">Data Crawling</h3>
+              <p className="pipeline__stage-tech">BeautifulSoup + Tesseract OCR</p>
+              <p className="pipeline__stage-desc">
+                대학 공지사항, 학사 규정 등의 웹 페이지와
+                이미지/PDF 파일 등 원천 텍스트 데이터를
+                크롤링하여 RAG 지식베이스를 구축합니다.
+              </p>
+            </div>
+
+            <div className="pipeline__stage">
+              <div className="pipeline__number">2</div>
               <h3 className="pipeline__stage-title">Data Generation</h3>
               <p className="pipeline__stage-tech">Gemini API + LangChain</p>
               <p className="pipeline__stage-desc">
-                대학 학사 규정, 공지사항 등 원천 텍스트로부터
+                크롤링된 원천 텍스트로부터
                 Gemini가 고품질 Instruction Q&A 데이터셋을
                 JSONL 형태로 자동 생성합니다.
               </p>
             </div>
 
             <div className="pipeline__stage">
-              <div className="pipeline__number">2</div>
+              <div className="pipeline__number">3</div>
               <h3 className="pipeline__stage-title">Fine-Tuning</h3>
               <p className="pipeline__stage-tech">Llama-3 Bllossom + QLoRA</p>
               <p className="pipeline__stage-desc">
@@ -231,11 +242,11 @@ function App() {
             </div>
 
             <div className="pipeline__stage">
-              <div className="pipeline__number">3</div>
+              <div className="pipeline__number">4</div>
               <h3 className="pipeline__stage-title">RAG Serving</h3>
               <p className="pipeline__stage-tech">FastAPI + ChromaDB</p>
               <p className="pipeline__stage-desc">
-                KR-ELECTRA 임베딩 + ChromaDB 벡터 검색으로
+                BGE-M3 임베딩 + ChromaDB 벡터 검색으로
                 근거 문서를 찾아 파인튜닝 모델이
                 답변과 출처를 함께 생성합니다.
               </p>
@@ -302,7 +313,7 @@ function App() {
             <div className="tech-item">
               <span className="tech-item__icon">🔍</span>
               <div className="tech-item__name">ChromaDB</div>
-              <div className="tech-item__desc">KR-ELECTRA 임베딩</div>
+              <div className="tech-item__desc">BGE-M3 임베딩</div>
             </div>
             <div className="tech-item">
               <span className="tech-item__icon">🐘</span>
