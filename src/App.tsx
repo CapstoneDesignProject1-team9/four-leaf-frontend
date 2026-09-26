@@ -289,12 +289,20 @@ function App() {
   │                                                   │
   │  ┌───────────────────────────────────────────┐    │
   │  │  `}<span className="blue">Nginx 1.27</span>{`  (리버스 프록시, HTTPS)         │    │
-  │  │   ├── /      → `}<span className="accent">Frontend</span>{`  (React 19)  :3000  │    │
-  │  │   ├── /api/  → `}<span className="yellow">Backend</span>{`   (Spring)   :8080  │    │
-  │  │   └── /ai/   → `}<span className="blue">AI 서비스</span>{` (FastAPI)  :8000  │    │
+  │  │   ├── /      → `}<span className="accent">Frontend</span>{` (React 19+Vite 8):3000 │    │
+  │  │   ├── /api/  → `}<span className="yellow">Backend</span>{`  (Spring Boot 3) :8080 │    │
+  │  │   └── /ai/   → `}<span className="blue">AI 서비스</span>{` (FastAPI)       :8000 │    │
   │  └───────────────────────────────────────────┘    │
   │                                                   │
   │  `}<span className="dim">PostgreSQL 16  ·  Redis 7  ·  ChromaDB</span>{`          │
+  └─────────────────────────────────────────────────┘
+                          │ 
+               (Serverless GPU 연동)
+                          ▼
+  ┌─────────────────────────────────────────────────┐
+  │  `}<span className="accent">Modal</span>{` (서버리스 GPU 플랫폼)                    │
+  │   - A100 GPU 동적 할당 (Scale-to-Zero)            │
+  │   - Llama-3 Bllossom 8B 모델 추론                 │
   └─────────────────────────────────────────────────┘`}
           </pre>
         </div>
