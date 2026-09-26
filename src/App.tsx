@@ -59,7 +59,7 @@ function App() {
       <section className="hero" id="hero">
         <div className="hero__badge">
           <span className="hero__badge-dot" />
-          오픈소스 · 네이버클라우드 기반
+          오픈소스 · AWS 기반
         </div>
 
         <h1 className="hero__title">
@@ -248,19 +248,19 @@ function App() {
         <div className="container reveal" ref={addRevealRef}>
           <p className="section__eyebrow">System Architecture</p>
           <h2 className="section__title">
-            <span className="text-gradient">네이버클라우드</span> 위에 구축된<br />
+            <span className="text-gradient">AWS</span> 위에 구축된<br />
             프로덕션 아키텍처.
           </h2>
           <p className="section__description">
             4개 독립 레포지토리, GitHub Actions CI/CD,
-            NCP Container Registry 기반 자동 배포 파이프라인.
+            AWS ECR 기반 자동 배포 파이프라인.
           </p>
         </div>
 
         <div className="container">
           <pre className="arch-diagram reveal" ref={addRevealRef}>
 {`  ┌─────────────────────────────────────────────────┐
-  │  `}<span className="accent">NCP Server</span>{` (Ubuntu) — Docker Compose             │
+  │  `}<span className="accent">AWS EC2</span>{` (Ubuntu) — Docker Compose               │
   │                                                   │
   │  ┌───────────────────────────────────────────┐    │
   │  │  `}<span className="blue">Nginx 1.27</span>{`  (리버스 프록시, HTTPS)         │    │
@@ -308,8 +308,8 @@ function App() {
             </div>
             <div className="tech-item">
               <span className="tech-item__icon">🚀</span>
-              <div className="tech-item__name">NCP Server</div>
-              <div className="tech-item__desc">NCR + Docker Compose</div>
+              <div className="tech-item__name">AWS EC2</div>
+              <div className="tech-item__desc">ECR + Docker Compose</div>
             </div>
             <div className="tech-item">
               <span className="tech-item__icon">🔄</span>
