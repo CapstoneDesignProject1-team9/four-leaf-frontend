@@ -2,10 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Chat.css'
 
+interface SourceDocument {
+  content?: string
+  source?: string
+  category?: string
+}
+
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
-  sources?: string[]
+  sources?: SourceDocument[]
 }
 
 function Chat() {
@@ -104,9 +110,23 @@ function Chat() {
                   {msg.sources && msg.sources.length > 0 && (
                     <div className="chat-sources">
                       <span className="chat-sources-label">📎 참고 문서:</span>
-                      {msg.sources.map((s, j) => (
-                        <span key={j} className="chat-source-tag">{s}</span>
-                      ))}
+                      {msg.sources.map((s, j) =>
+                        s.source ? (
+                          <a
+                            key={j}
+                            className="chat-source-tag"
+                            href={s.source}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {s.category ? `${s.category} ${j + 1}` : `참고 문서 ${j + 1}`}
+                          </a>
+                        ) : (
+                          <span key={j} className="chat-source-tag">
+                            {s.category || `참고 문서 ${j + 1}`}
+                          </span>
+                        )
+                      )}
                     </div>
                   )}
                 </div>
