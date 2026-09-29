@@ -34,10 +34,8 @@ function Chat() {
     setIsTyping(true)
 
     try {
-      // Backend Request
-      // Depending on actual configuration, it might be /ai/api/v1/tutor/chat or /api/v1/tutor/chat
-      // Currently, vite.config.ts proxies /ai to http://localhost:8000
-      const response = await fetch('/ai/api/v1/tutor/chat', {
+      // Spring Boot Backend Request (/api/v1/chat)
+      const response = await fetch('/api/v1/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
