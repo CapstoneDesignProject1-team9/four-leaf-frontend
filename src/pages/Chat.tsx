@@ -5,7 +5,13 @@ import './Chat.css'
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
-  sources?: string[]
+  sources?: SourceDocument[]
+}
+
+interface SourceDocument {
+  content: string
+  source: string
+  category: string | null
 }
 
 function Chat() {
@@ -18,6 +24,7 @@ function Chat() {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const isComposingRef = useRef(false)
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -54,7 +61,7 @@ function Chat() {
       const aiMsg: ChatMessage = {
         role: 'assistant',
         content: data.answer || data.message || '답변을 가져오지 못했습니다.',
-        sources: data.sources || undefined,
+        sources: Array.isArray(data.sources) ? data.sources : undefined,
       }
       setMessages((prev) => [...prev, aiMsg])
     } catch (error) {
@@ -69,8 +76,12 @@ function Chat() {
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      // Enter may finish an in-progress Korean IME syllable on macOS.
+      if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229 || isComposingRef.current) {
+        return
+      }
       e.preventDefault()
       handleSend()
     }
@@ -88,7 +99,7 @@ function Chat() {
           Chat with 네잎
         </div>
         <div className="chat-header-model">
-          Llama-3 Bllossom
+          Llama 3.1 8B
         </div>
       </header>
 
@@ -107,7 +118,10 @@ function Chat() {
                     <div className="chat-sources">
                       <span className="chat-sources-label">📎 참고 문서:</span>
                       {msg.sources.map((s, j) => (
-                        <span key={j} className="chat-source-tag">{s}</span>
+                        <span key={j} className="chat-source-tag" title={s.content}>
+                          {s.category && `${s.category} · `}
+                          {s.source || '참고 문서'}
+                        </span>
                       ))}
                     </div>
                   )}
@@ -141,6 +155,8 @@ function Chat() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            onCompositionStart={() => { isComposingRef.current = true }}
+            onCompositionEnd={() => { isComposingRef.current = false }}
             rows={1}
           />
           <button
