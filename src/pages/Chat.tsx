@@ -11,13 +11,13 @@ interface SourceDocument {
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
-  sources?: SourceDocument[]
+  sources?: ChatSourceReference[]
 }
 
-interface SourceDocument {
-  content: string
-  source: string
-  category: string | null
+type ChatSourceReference = {
+  content?: string
+  source?: string
+  category?: string | null
 }
 
 function Chat() {
