@@ -14,10 +14,14 @@ export default defineConfig({
       usePolling: true, // Docker volume mount에서 파일 변경 감지
     },
     proxy: {
+      '/api': {
+        target: 'http://localhost:8080', // Spring Boot Backend port
+        changeOrigin: true,
+      },
       '/ai': {
         target: 'http://localhost:8000', // AI Backend FastAPI port
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ai/, '') // If AI backend doesn't expect /ai prefix. Or keep it if it does. Looking at architecture, it proxies /ai/ -> AI 서비스.
+        rewrite: (path) => path.replace(/^\/ai/, '') // If AI backend doesn't expect /ai prefix.
       }
     }
   },
