@@ -2,15 +2,10 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Chat.css'
 
-interface SourceDocument {
-  content?: string
-  source?: string
-  category?: string
-}
-
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
+  detectedCourse?: string
   sources?: ChatSourceReference[]
 }
 
@@ -24,11 +19,12 @@ function Chat() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: '안녕하세요! 네잎 🍀 AI 튜터입니다. 학사 규정, 수강신청 등 궁금한 점을 편하게 물어보세요.',
+      content: '안녕하세요! 네잎 🍀 AI 튜터입니다. 학사 규정, 수강신청 및 과목 질문 등 무엇이든 편하게 물어보세요.',
     },
   ])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [sessionId] = useState(() => 'sess_' + Math.random().toString(36).substring(2, 11))
   const chatEndRef = useRef<HTMLDivElement>(null)
   const isComposingRef = useRef(false)
 
@@ -53,7 +49,10 @@ function Chat() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userText }),
+        body: JSON.stringify({
+          message: userText,
+          session_id: sessionId,
+        }),
       })
 
       if (!response.ok) {
@@ -62,9 +61,15 @@ function Chat() {
 
       const data = await response.json()
       
+      const detectedCourse =
+        data.course_name && data.course_name !== '일반' && data.course_name !== '미지정'
+          ? data.course_name
+          : undefined
+
       const aiMsg: ChatMessage = {
         role: 'assistant',
         content: data.answer || data.message || '답변을 가져오지 못했습니다.',
+        detectedCourse,
         sources: Array.isArray(data.sources) ? data.sources : undefined,
       }
       setMessages((prev) => [...prev, aiMsg])
@@ -118,6 +123,15 @@ function Chat() {
               <div className="chat-bubble-wrapper">
                 <div className="chat-bubble">
                   <div className="chat-content">{msg.content}</div>
+
+                  {/* AI가 자동으로 과목 질문을 감지했을 때 표시되는 스마트 뱃지 */}
+                  {msg.detectedCourse && (
+                    <div className="chat-detected-badge">
+                      <span className="chat-detected-label">📚 관련 과목:</span>
+                      <span className="chat-detected-name">{msg.detectedCourse}</span>
+                    </div>
+                  )}
+
                   {msg.sources && msg.sources.length > 0 && (
                     <div className="chat-sources">
                       <span className="chat-sources-label">📎 참고 문서:</span>
@@ -155,7 +169,7 @@ function Chat() {
         <div className="chat-input-wrapper">
           <textarea
             className="chat-input"
-            placeholder="AI 튜터 네잎에게 질문하세요..."
+            placeholder="AI 튜터 네잎에게 질문하세요... (예: 수강신청 일정, 컴구 시험 범위 등)"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -167,6 +181,7 @@ function Chat() {
             className="chat-send-btn"
             onClick={handleSend}
             disabled={!inputValue.trim() || isTyping}
+            aria-label="메시지 전송"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>

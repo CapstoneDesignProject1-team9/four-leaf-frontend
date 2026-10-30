@@ -44,7 +44,8 @@ function App() {
             <li><a href="#pipeline">파이프라인</a></li>
             <li><a href="#architecture">아키텍처</a></li>
             <li><a href="#get-started">시작하기</a></li>
-            <li><Link to="/chat">Demo</Link></li>
+            <li><Link to="/chat">AI 튜터</Link></li>
+            <li><Link to="/advisor">AI 어드바이저</Link></li>
           </ul>
           <a
             className="nav__cta"
@@ -171,6 +172,9 @@ function App() {
                 <li>세션 기반 멀티턴 대화 지원</li>
                 <li>파인튜닝 모델로 대학 도메인 특화</li>
               </ul>
+              <Link to="/chat" className="btn btn--secondary" style={{ marginTop: '1.25rem', display: 'inline-block' }}>
+                AI 튜터 체험하기 →
+              </Link>
             </div>
 
             {/* Track 2 */}
@@ -185,6 +189,9 @@ function App() {
                 <li>교수자를 위한 맞춤 액션 추천</li>
                 <li>JSON 구조화 출력으로 대시보드 연동</li>
               </ul>
+              <Link to="/advisor" className="btn btn--secondary" style={{ marginTop: '1.25rem', display: 'inline-block' }}>
+                어드바이저 리포트 보기 →
+              </Link>
             </div>
           </div>
         </div>

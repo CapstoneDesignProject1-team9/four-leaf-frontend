@@ -179,6 +179,29 @@
   }
 }
 
+/* AI Detected Course Badge */
+.chat-detected-badge {
+  margin-top: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  background: var(--color-accent-dim);
+  border: 1px solid rgba(48, 209, 88, 0.25);
+  padding: 3px 10px;
+  border-radius: 980px;
+}
+
+.chat-detected-label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.chat-detected-name {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
 /* ─── Input Area ─── */
 .chat-footer {
   padding: 1rem;
