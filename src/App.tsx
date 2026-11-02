@@ -164,13 +164,13 @@ function App() {
             <div className="feature-card">
               <h3 className="feature-card__title">AI 튜터 — 학생용</h3>
               <p className="feature-card__desc">
-                대학 내부 문서 기반 RAG로 할루시네이션 없는 24시간 맞춤형 답변을 제공합니다.
+                대학 공식 문서 기반 RAG로 환각을 줄이고, 출처를 함께 제시하는 24시간 맞춤형 답변을 제공합니다.
               </p>
               <ul className="feature-card__list">
                 <li>학사 규정·진로·취업 정보 실시간 질의응답</li>
                 <li>답변마다 출처 문서 각주 자동 제공</li>
-                <li>세션 기반 멀티턴 대화 지원</li>
-                <li>파인튜닝 모델로 대학 도메인 특화</li>
+                <li>학생 질문을 강의별로 분류·저장</li>
+                <li>Llama 3.1 8B 기반 · 학생용 LoRA 어댑터 학습·평가</li>
               </ul>
               <Link to="/chat" className="btn btn--secondary" style={{ marginTop: '1.25rem', display: 'inline-block' }}>
                 AI 튜터 체험하기 →
@@ -229,22 +229,22 @@ function App() {
             <div className="pipeline__stage">
               <div className="pipeline__number">2</div>
               <h3 className="pipeline__stage-title">Data Generation</h3>
-              <p className="pipeline__stage-tech">Gemini API + LangChain</p>
+              <p className="pipeline__stage-tech">Claude API 생성 · 자동 검수</p>
               <p className="pipeline__stage-desc">
                 크롤링된 원천 텍스트로부터
-                Gemini가 고품질 Instruction Q&A 데이터셋을
-                JSONL 형태로 자동 생성합니다.
+                Claude가 Instruction Q&A 데이터셋을 생성하고
+                별도 모델이 검수해 JSONL로 저장합니다.
               </p>
             </div>
 
             <div className="pipeline__stage">
               <div className="pipeline__number">3</div>
               <h3 className="pipeline__stage-title">Fine-Tuning</h3>
-              <p className="pipeline__stage-tech">Llama-3 Bllossom + QLoRA</p>
+              <p className="pipeline__stage-tech">Llama 3.1 8B + LoRA</p>
               <p className="pipeline__stage-desc">
-                한국어에 강한 Bllossom 8B 모델을
-                A100 GPU에서 4bit QLoRA 방식으로
-                대학 도메인에 특화 파인튜닝합니다.
+                Llama 3.1 8B Instruct를 LoRA(rank 16)로
+                대학 도메인에 맞춰 학습하고,
+                Base · RAG · LoRA 세 조건을 비교 평가합니다.
               </p>
             </div>
 
@@ -254,7 +254,7 @@ function App() {
               <p className="pipeline__stage-tech">FastAPI + ChromaDB</p>
               <p className="pipeline__stage-desc">
                 BGE-M3 임베딩 + ChromaDB 벡터 검색으로
-                근거 문서를 찾아 파인튜닝 모델이
+                근거 문서를 찾아 Ollama의 Llama 3.1 8B가
                 답변과 출처를 함께 생성합니다.
               </p>
             </div>
@@ -264,7 +264,7 @@ function App() {
               <h3 className="pipeline__stage-title">Live Demo</h3>
               <p className="pipeline__stage-tech">React + Spring Boot</p>
               <p className="pipeline__stage-desc">
-                서빙 중인 AI 모델을 홈페이지에 직접 연동하여,
+                서빙 중인 AI 튜터를 홈페이지에 직접 연동하여,
                 사용자가 언제든 실시간으로 질문하고
                 AI 튜터를 체험해볼 수 있도록 구현했습니다.
               </p>
@@ -304,12 +304,12 @@ function App() {
   │  `}<span className="dim">PostgreSQL 16  ·  Redis 7  ·  ChromaDB</span>{`          │
   └─────────────────────────────────────────────────┘
                           │ 
-               (Serverless GPU 연동)
+               (LLM 추론 연동)
                           ▼
   ┌─────────────────────────────────────────────────┐
-  │  `}<span className="accent">Modal</span>{` (서버리스 GPU 플랫폼)                    │
-  │   - A100 GPU 동적 할당 (Scale-to-Zero)            │
-  │   - Llama-3 Bllossom 8B 모델 추론                 │
+  │  `}<span className="accent">Ollama</span>{` (LLM 추론 서버)                          │
+  │   - 호스트에서 실행, AI 컨테이너가 연결            │
+  │   - Llama 3.1 8B 모델 추론                        │
   └─────────────────────────────────────────────────┘`}
           </pre>
         </div>
@@ -333,8 +333,8 @@ function App() {
             </div>
             <div className="tech-item">
               <span className="tech-item__icon">🦙</span>
-              <div className="tech-item__name">Llama-3 Bllossom</div>
-              <div className="tech-item__desc">QLoRA Fine-Tuning</div>
+              <div className="tech-item__name">Llama 3.1 8B</div>
+              <div className="tech-item__desc">LoRA Fine-Tuning</div>
             </div>
             <div className="tech-item">
               <span className="tech-item__icon">🔍</span>
@@ -494,7 +494,7 @@ function App() {
             </li>
             <li>
               <a
-                href="https://github.com/CapstoneDesignProject1-team9/four-laef-frontend"
+                href="https://github.com/CapstoneDesignProject1-team9/four-leaf-frontend"
                 target="_blank"
                 rel="noopener noreferrer"
               >
