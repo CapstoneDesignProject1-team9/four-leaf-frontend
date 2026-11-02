@@ -1,4 +1,4 @@
-# 🍀 four-laef-frontend
+# 🍀 four-leaf-frontend
 
 > **Four-Leaf** 프로젝트의 프론트엔드 서비스입니다.  
 > 대학생 AI 튜터 서비스의 사용자 인터페이스를 제공합니다.
@@ -44,15 +44,17 @@ Stage 2: nginx:1.27-alpine → dist/ 서빙 (포트 3000)
 ## 📁 프로젝트 구조
 
 ```
-four-laef-frontend/
+four-leaf-frontend/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml            # PR/push 시 lint + build 검사
 │       └── trigger-cd.yml    # main push 시 ECR push → infra dispatch
 ├── src/
 │   ├── main.tsx              # React 진입점
-│   ├── App.tsx               # 루트 컴포넌트
-│   └── ...                   # 컴포넌트, 페이지 등 추가 예정
+│   ├── App.tsx               # 랜딩 페이지 (/)
+│   └── pages/
+│       ├── Chat.tsx          # 학생용 AI 튜터 채팅 (/chat)
+│       └── Advisor.tsx       # 교수자용 질문 분석 리포트 (/advisor)
 ├── public/                   # 정적 파일
 ├── Dockerfile                # 프로덕션 (nginx 서빙)
 ├── Dockerfile.dev            # 로컬 개발 (Vite dev server + HMR)
@@ -98,8 +100,12 @@ npm install
 
 ```bash
 npm run dev
-# http://localhost:5173
+# http://localhost:3000
 ```
+
+Node.js 20.19 이상 또는 22.12 이상이 필요합니다. `/api`와 `/ai` 요청은 각각 `localhost:8080`, `localhost:8000`으로 프록시되므로, 화면만 띄우면 채팅과 리포트 API는 502를 반환합니다.
+
+교수자 화면(`/advisor`)은 API를 호출할 수 없으면 코드에 포함된 샘플 리포트를 표시합니다. 실제 분석 결과가 아닙니다.
 
 ### 3. Docker로 실행 (전체 스택 연동 시)
 
@@ -110,6 +116,8 @@ cp .env.dev.example .env.dev
 docker compose -f docker-compose.dev.yml up -d --build
 # http://localhost
 ```
+
+폴더 구조와 필요한 디스크 용량은 [four-leaf-infra README](https://github.com/CapstoneDesignProject1-team9/four-leaf-infra#-로컬-개발-환경)를 참고합니다. ZIP으로 받았다면 폴더 이름의 `-main`을 지워야 합니다.
 
 ---
 
@@ -132,6 +140,7 @@ docker compose -f docker-compose.dev.yml up -d --build
 | `VITE_AI_BASE_URL` | `/ai` | AI 서비스 기본 경로 |
 
 > Vite 환경변수는 `VITE_` 접두사가 있어야 클라이언트에서 접근 가능합니다.
+> 현재 `src`에서는 위 변수를 사용하지 않으며, API 경로는 코드에 직접 지정되어 있습니다(`/api/v1/chat`, `/api/v1/advisor/report`).
 
 ---
 
