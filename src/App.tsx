@@ -164,13 +164,13 @@ function App() {
             <div className="feature-card">
               <h3 className="feature-card__title">AI 튜터 — 학생용</h3>
               <p className="feature-card__desc">
-                대학 내부 문서 기반 RAG로 할루시네이션 없는 24시간 맞춤형 답변을 제공합니다.
+                대학 공식 문서 기반 RAG로 환각을 줄이고, 출처를 함께 제시하는 24시간 맞춤형 답변을 제공합니다.
               </p>
               <ul className="feature-card__list">
                 <li>학사 규정·진로·취업 정보 실시간 질의응답</li>
                 <li>답변마다 출처 문서 각주 자동 제공</li>
-                <li>세션 기반 멀티턴 대화 지원</li>
-                <li>파인튜닝 모델로 대학 도메인 특화</li>
+                <li>학생 질문을 강의별로 분류·저장</li>
+                <li>Llama 3.1 8B 기반 · 학생용 LoRA 어댑터 학습·평가</li>
               </ul>
               <Link to="/chat" className="btn btn--secondary" style={{ marginTop: '1.25rem', display: 'inline-block' }}>
                 AI 튜터 체험하기 →
