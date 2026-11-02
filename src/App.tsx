@@ -494,7 +494,7 @@ function App() {
             </li>
             <li>
               <a
-                href="https://github.com/CapstoneDesignProject1-team9/four-laef-frontend"
+                href="https://github.com/CapstoneDesignProject1-team9/four-leaf-frontend"
                 target="_blank"
                 rel="noopener noreferrer"
               >
