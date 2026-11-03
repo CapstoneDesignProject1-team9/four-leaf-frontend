@@ -15,11 +15,11 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // Spring Boot Backend port
+        target: process.env.BACKEND_SERVICE_URL || 'http://localhost:8080', // Spring Boot Backend port
         changeOrigin: true,
       },
       '/ai': {
-        target: 'http://localhost:8000', // AI Backend FastAPI port
+        target: process.env.AI_SERVICE_URL || 'http://localhost:8000', // AI Backend FastAPI port
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/ai/, '') // If AI backend doesn't expect /ai prefix.
       }

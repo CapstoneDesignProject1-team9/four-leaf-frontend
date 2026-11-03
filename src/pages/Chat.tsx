@@ -43,7 +43,7 @@ function Chat() {
     setIsTyping(true)
 
     try {
-      // Spring Boot Backend Request (/api/v1/chat)
+      // Route through Spring Boot; it forwards the request to the AI service.
       const response = await fetch('/api/v1/chat', {
         method: 'POST',
         headers: {
