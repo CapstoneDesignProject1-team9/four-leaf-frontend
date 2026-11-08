@@ -164,7 +164,7 @@ function Advisor() {
             학생 질문 기록에 <span className="text-gradient">무엇이든 물어보세요</span>.
           </h1>
           <p className="advisor-subtitle">
-            AI 튜터에 들어온 학생 질문(최근 4개월 보관)을 Gemini가 분석해 답합니다.
+            AI 튜터에 들어온 학생 질문(최근 4개월 보관)을 Claude가 분석해 답합니다.
             <br />
             많이 나온 질문과 어려워하는 부분을 묻거나, 리포트·퀴즈·시험문제를 요청할 수 있습니다.
           </p>
