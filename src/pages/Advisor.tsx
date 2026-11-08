@@ -8,8 +8,12 @@ interface QuestionGroup {
   examples: string[]
 }
 
+type AdvisorTask = 'summary' | 'report' | 'difficulty' | 'quiz' | 'exam'
+
 interface AdvisorAnswer {
   answer: string
+  task?: AdvisorTask | null
+  item_count?: number | null
   topic: string | null
   matched_count: number
   total_count: number
@@ -19,10 +23,19 @@ interface AdvisorAnswer {
 
 const EXAMPLE_QUESTIONS = [
   '컴퓨터구조 관련 학생들 질문은 뭐가 많았어?',
+  '컴퓨터구조에서 학생들이 어려워하는 부분 알려줘',
   '학생들 리포트 써줘',
-  '운영체제에서 학생들이 어려워하는 개념이 뭐야?',
-  '학사 일정 관련해서 어떤 질문이 들어왔어?',
+  '컴퓨터구조 퀴즈 5문제 만들어줘',
+  '운영체제 시험문제 3개 만들어줘',
 ]
+
+const TASK_INFO: Record<AdvisorTask, { icon: string; title: string }> = {
+  summary: { icon: '📝', title: '질문 빈도 분석' },
+  report: { icon: '📋', title: '학생 질문 리포트' },
+  difficulty: { icon: '🧩', title: '학생들이 어려워하는 부분' },
+  quiz: { icon: '✏️', title: '생성된 퀴즈' },
+  exam: { icon: '📄', title: '생성된 시험문제' },
+}
 
 const PERIOD_OPTIONS: { label: string; days: number | null }[] = [
   { label: '전체(4개월)', days: null },
@@ -38,6 +51,8 @@ const DEMO_ANSWER: AdvisorAnswer = {
     '- 파이프라인 해저드(4건): 포워딩으로 해결되지 않는 load-use 해저드와 stall 발생 시점을 헷갈려 했습니다.\n' +
     '- MIPS 명령어와 데이터패스(3건): lw/sw 형식과 제어 신호 결정 과정에 대한 질문이 있었습니다.\n\n' +
     '캐시 주소 분할 예제와 load-use 해저드 타이밍 다이어그램을 보충 자료로 제공하는 것을 권장합니다.',
+  task: 'summary',
+  item_count: null,
   topic: '컴퓨터구조',
   matched_count: 14,
   total_count: 27,
@@ -116,6 +131,8 @@ function Advisor() {
   }
 
   const maxCount = Math.max(1, ...(result?.groups.map((g) => g.count) ?? [1]))
+  const taskInfo = TASK_INFO[result?.task ?? 'summary'] ?? TASK_INFO.summary
+  const isGeneration = result?.task === 'quiz' || result?.task === 'exam'
 
   return (
     <div className="advisor-container">
@@ -149,7 +166,7 @@ function Advisor() {
           <p className="advisor-subtitle">
             AI 튜터에 들어온 학생 질문(최근 4개월 보관)을 Gemini가 분석해 답합니다.
             <br />
-            주제별로 어떤 질문이 많았는지 묻거나, 전체 리포트를 요청할 수 있습니다.
+            많이 나온 질문과 어려워하는 부분을 묻거나, 리포트·퀴즈·시험문제를 요청할 수 있습니다.
           </p>
         </div>
 
@@ -237,6 +254,10 @@ function Advisor() {
 
             <div className="advisor-tags advisor-meta">
               <span className="advisor-tag">기간: {periodText(result.period_days)}</span>
+              <span className="advisor-tag">
+                {taskInfo.icon} {taskInfo.title}
+                {result.item_count ? ` · ${result.item_count}문항` : ''}
+              </span>
               <span className="advisor-tag">주제: {result.topic ?? '전체'}</span>
               <span className="advisor-tag">
                 관련 질문 {result.matched_count}건 / 전체 {result.total_count}건
@@ -245,15 +266,17 @@ function Advisor() {
 
             <div className="advisor-grid">
               <div className="advisor-card advisor-card--summary">
-                <div className="advisor-card-icon">📝</div>
-                <h3 className="advisor-card-title">AI 어드바이저 답변</h3>
+                <div className="advisor-card-icon">{taskInfo.icon}</div>
+                <h3 className="advisor-card-title">{taskInfo.title}</h3>
                 <p className="advisor-card-text">{result.answer}</p>
               </div>
 
               {result.groups.length > 0 && (
                 <div className="advisor-card">
                   <div className="advisor-card-icon">📊</div>
-                  <h3 className="advisor-card-title">질문 유형별 건수</h3>
+                  <h3 className="advisor-card-title">
+                    {isGeneration ? '문항의 근거가 된 학생 질문 유형' : '질문 유형별 건수'}
+                  </h3>
                   <ul className="advisor-rec-list">
                     {result.groups.map((group, i) => (
                       <li key={`${group.label}-${i}`} className="advisor-rec-item advisor-group-item">
