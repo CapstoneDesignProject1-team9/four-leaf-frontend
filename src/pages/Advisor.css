@@ -446,3 +446,54 @@
   }
 }
 
+
+/* ─── 교수자 질문 결과: 메타 정보, 오류, 유형별 건수 ─── */
+.advisor-meta {
+  margin-bottom: 1.25rem;
+}
+
+.advisor-error-card {
+  border-color: rgba(255, 159, 10, 0.35);
+}
+
+.advisor-group-item .advisor-rec-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.advisor-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--color-text-primary);
+}
+
+.advisor-group-count {
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.advisor-group-bar {
+  height: 6px;
+  margin: 0.5rem 0 0.625rem;
+  background: var(--color-surface);
+  border-radius: 980px;
+  overflow: hidden;
+}
+
+.advisor-group-bar-fill {
+  height: 100%;
+  background: var(--gradient-accent);
+  border-radius: 980px;
+}
+
+.advisor-group-examples {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
