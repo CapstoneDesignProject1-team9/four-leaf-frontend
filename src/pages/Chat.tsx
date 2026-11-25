@@ -7,6 +7,8 @@ interface ChatMessage {
   content: string
   detectedCourse?: string
   sources?: ChatSourceReference[]
+  // AI가 학기·분반을 되물을 때의 선택지. 누르면 그 값이 다음 질문으로 전송된다.
+  options?: string[]
 }
 
 type ChatSourceReference = {
@@ -32,10 +34,10 @@ function Chat() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return
+  const handleSend = async (text?: string) => {
+    const userText = (text ?? inputValue).trim()
+    if (!userText || isTyping) return
 
-    const userText = inputValue.trim()
     const userMsg: ChatMessage = { role: 'user', content: userText }
     
     setMessages((prev) => [...prev, userMsg])
@@ -71,6 +73,7 @@ function Chat() {
         content: data.answer || data.message || '답변을 가져오지 못했습니다.',
         detectedCourse,
         sources: Array.isArray(data.sources) ? data.sources : undefined,
+        options: Array.isArray(data.options) && data.options.length > 0 ? data.options : undefined,
       }
       setMessages((prev) => [...prev, aiMsg])
     } catch (error) {
@@ -132,6 +135,23 @@ function Chat() {
                     </div>
                   )}
 
+                  {/* 마지막 답변의 선택지만 누를 수 있다. */}
+                  {msg.options && idx === messages.length - 1 && (
+                    <div className="chat-options">
+                      {msg.options.map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          className="chat-option-btn"
+                          onClick={() => handleSend(option)}
+                          disabled={isTyping}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   {msg.sources && msg.sources.length > 0 && (
                     <div className="chat-sources">
                       <span className="chat-sources-label">📎 참고 문서:</span>
@@ -179,7 +199,7 @@ function Chat() {
           />
           <button
             className="chat-send-btn"
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={!inputValue.trim() || isTyping}
             aria-label="메시지 전송"
           >
