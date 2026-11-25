@@ -144,6 +144,35 @@
   border: 1px solid var(--color-border);
 }
 
+/* Clarification options (학기·분반 선택) */
+.chat-options {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chat-option-btn {
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.chat-option-btn:hover:not(:disabled) {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.chat-option-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 /* Typing Indicator */
 .chat-bubble--typing {
   display: flex;
